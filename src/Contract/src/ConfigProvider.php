@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Core\Contract;
 
 use Core\Contract\Repository\ContractRepository;
+use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 
 class ConfigProvider
 {
