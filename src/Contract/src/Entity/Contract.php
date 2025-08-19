@@ -70,4 +70,14 @@ class Contract extends AbstractEntity
     {
         
     }
+    
+    public function getArrayCopy(): array
+    {
+        return [
+            'uuid'         => $this->uuid->toString(),
+            'folder_id'    => $this->getFolder_id(),
+            'project_name' => $this->getProject_name(),
+        ];
+    }
+
 }
