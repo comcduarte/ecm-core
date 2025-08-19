@@ -5,6 +5,7 @@ namespace Core\Contract;
 
 use Core\Contract\Repository\ContractRepository;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
+use Dot\DependencyInjection\Factory\AttributedRepositoryFactory;
 
 class ConfigProvider
 {
