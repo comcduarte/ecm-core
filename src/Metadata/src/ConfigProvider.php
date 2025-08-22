@@ -8,6 +8,8 @@ use Dot\DependencyInjection\Factory\AttributedRepositoryFactory;
 
 class ConfigProvider
 {
+    public const REGEXP_TEMPLATEKEY = '{template_key:[a-zA-Z]*}';
+    
     public function __invoke(): array
     {
         return [
