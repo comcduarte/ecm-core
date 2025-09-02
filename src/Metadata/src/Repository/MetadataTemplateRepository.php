@@ -20,10 +20,10 @@ class MetadataTemplateRepository extends AbstractRepository
 {
     use AccessTokenAwareTrait;
     
-    public function getMetadataTemplates(array $params, AccessToken $access_token): MetadataTemplates
+    public function getMetadataTemplates(array $params,array $filters = []): MetadataTemplates
     {
-        $template = new MetadataTemplate($access_token->getAccessToken());
-        $templates = $template->list_all_metadata_templates_for_enterprise();
+        $metadata_template = new \comcduarte\Box\API\Resource\MetadataTemplate($params['access_token']->getAccessToken());
+        $templates = $metadata_template->list_all_metadata_templates_for_enterprise();
         return $templates;
     }
     
@@ -54,7 +54,7 @@ class MetadataTemplateRepository extends AbstractRepository
         
         if ($result instanceof ClientError) {
             throw new ClientErrorException();
-        } elseif ($result instanceof MetadataTemplate) {
+        } elseif ($result instanceof \comcduarte\Box\API\Resource\MetadataTemplate) {
             return $result;
         }
         
