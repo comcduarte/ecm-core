@@ -3,20 +3,17 @@ declare(strict_types=1);
 
 namespace Core\Contract\Entity;
 
-use Core\App\Entity\AbstractEntity;
-use Core\Contract\Repository\ContractRepository;
+use Core\App\Entity\EntityInterface;
+use Laminas\Stdlib\ArraySerializableInterface;
+use Ramsey\Uuid\UuidInterface;
 use DateTimeImmutable;
-use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ContractRepository::class)]
-#[ORM\Table("contract")]
-#[ORM\HasLifecycleCallbacks]
-class Contract extends AbstractEntity
+class Contract implements ArraySerializableInterface, EntityInterface
 {
-    #[ORM\Column(name: "folder_id", type: "string", length: 100)]
+    protected UuidInterface $uuid;
+    
     protected string $folder_id;
     
-    #[ORM\Column(name: "project_name", type: "string", length: 100)]
     protected string $project_name;
     
     /**
@@ -79,5 +76,31 @@ class Contract extends AbstractEntity
             'project_name' => $this->getProject_name(),
         ];
     }
-
+    
+    public function isDeleted(): bool
+    {}
+    
+    public function getUuid(): UuidInterface
+    {}
+    
+    public function exchangeArray(array $array): void
+    {
+        foreach ($array as $property => $values) {
+            if (is_array($values)) {
+                $method = 'add' . ucfirst($property);
+                if (! method_exists($this, $method)) {
+                    continue;
+                }
+                foreach ($values as $value) {
+                    $this->$method($value);
+                }
+            } else {
+                $method = 'set' . ucfirst($property);
+                if (! method_exists($this, $method)) {
+                    continue;
+                }
+                $this->$method($values);
+            }
+        }
+    }
 }

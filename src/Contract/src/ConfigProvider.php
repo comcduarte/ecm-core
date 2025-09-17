@@ -5,7 +5,7 @@ namespace Core\Contract;
 
 use Core\Contract\Repository\ContractRepository;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
-use Dot\DependencyInjection\Factory\AttributedRepositoryFactory;
+use Laminas\ServiceManager\Factory\InvokableFactory;
 
 class ConfigProvider
 {
@@ -13,7 +13,7 @@ class ConfigProvider
     {
         return [
             'dependencies' => $this->getDependencies(),
-            'doctrine'     => $this->getDoctrineConfig(),
+//             'doctrine'     => $this->getDoctrineConfig(),
         ];
     }
     
@@ -21,7 +21,7 @@ class ConfigProvider
     {
         return [
             'factories' => [
-                ContractRepository::class => AttributedRepositoryFactory::class,
+                ContractRepository::class => InvokableFactory::class,
             ],
         ];
     }

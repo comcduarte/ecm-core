@@ -20,24 +20,32 @@ class MetadataTemplateRepository extends AbstractRepository
 {
     use AccessTokenAwareTrait;
     
-    public function getMetadataTemplates(array $params,array $filters = []): MetadataTemplates
+    public function getMetadataTemplates(array $params, AccessToken $access_token): MetadataTemplates
     {
-        $metadata_template = new \comcduarte\Box\API\Resource\MetadataTemplate($params['access_token']->getAccessToken());
+        $metadata_template = new \comcduarte\Box\API\Resource\MetadataTemplate($access_token->getAccessToken());
         $templates = $metadata_template->list_all_metadata_templates_for_enterprise();
         return $templates;
     }
     
-    public function createMetadataTemplate(array $params, AccessToken $access_token): void
+    public function createMetadataTemplate(array $params, AccessToken $access_token): MetadataTemplate
     {
         $template = new MetadataTemplate($access_token->getAccessToken());
         $template->exchangeArray($params);
-        $template->create_metadata_template();
-        return;
+        $object = $template->create_metadata_template();
+        
+        if ($object instanceof ClientError) {
+            /**
+             * @var ClientError $object
+             */
+            throw new ClientErrorException($object->message);
+        }
+        
+        return $object;
     }
     
-    public function saveMetadataTemplate(array $params)
+    public function saveMetadataTemplate(array $params, AccessToken $access_token)
     {
-        $template = new MetadataTemplate($params['access_token']->getAccessToken());
+        $template = new MetadataTemplate($access_token->getAccessToken());
 
         $template->displayName = $params['displayName'];
         $template->templateKey = $params['displayName'];
