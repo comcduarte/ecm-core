@@ -7,6 +7,7 @@ use Core\App\Entity\EntityInterface;
 use Laminas\Stdlib\ArraySerializableInterface;
 use Ramsey\Uuid\UuidInterface;
 use DateTimeImmutable;
+use comcduarte\Box\API\Resource\Folder;
 
 class Contract implements ArraySerializableInterface, EntityInterface
 {
@@ -16,6 +17,24 @@ class Contract implements ArraySerializableInterface, EntityInterface
     
     protected string $project_name;
     
+    protected Folder $contract_folder;
+    
+    /**
+     * @return \comcduarte\Box\API\Resource\Folder
+     */
+    public function getContract_folder()
+    {
+        return $this->contract_folder;
+    }
+
+    /**
+     * @param \comcduarte\Box\API\Resource\Folder $contract_folder
+     */
+    public function setContract_folder($contract_folder)
+    {
+        $this->contract_folder = $contract_folder;
+    }
+
     /**
      * @return string
      */

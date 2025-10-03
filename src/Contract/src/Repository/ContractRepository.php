@@ -16,6 +16,11 @@ class ContractRepository
         $app_folder = new Folder($access_token);
         $folder_info = $app_folder->list_items_in_folder($params['application-folder']);
         
+        if ($folder_info instanceof ClientError) {
+            throw new ClientErrorException($folder_info->message);
+        }
+        
+        
         //-- FIND CABINET --//
         $folders = [];
         foreach ($folder_info->entries as $entry) {
@@ -39,7 +44,11 @@ class ContractRepository
                 $contract_folder = $app_folder->list_items_in_folder($year['id']);
                 
                 foreach ($contract_folder->entries as $contract) {
-                    $folders[$doc_type['name']][$year['name']][$contract['name']] = $contract['id'];
+                    $entity = new Contract();
+                    $entity->setProject_name($contract['name']);
+                    $entity->setFolder_id($contract['id']);
+                    
+                    $folders[$doc_type['name']][$year['name']][$contract['name']] = $entity;
                 }
             }
         }
@@ -88,5 +97,18 @@ class ContractRepository
         }
         
         return true;
+    }
+
+    public function find(string $folder_id, AccessToken $access_token): Contract
+    {
+        $contract = new Contract();
+        $contract->setFolder_id($folder_id);
+        $contract->setProject_name('Lorem Ipsum');
+        
+        $contract_folder = new Folder($access_token);
+        $contract_folder->get_folder_information($folder_id);
+        $contract->setContract_folder($contract_folder);
+        
+        return $contract;
     }
 }
