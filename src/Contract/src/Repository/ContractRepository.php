@@ -4,6 +4,7 @@ namespace Core\Contract\Repository;
 
 use Core\Contract\Entity\Contract;
 use comcduarte\Box\API\AccessToken;
+use comcduarte\Box\API\MetadataQuery;
 use comcduarte\Box\API\Exception\ClientErrorException;
 use comcduarte\Box\API\Resource\ClientError;
 use comcduarte\Box\API\Resource\Folder;
@@ -110,5 +111,38 @@ class ContractRepository
         $contract->setContract_folder($contract_folder);
         
         return $contract;
+    }
+    
+    public function search(array $params, AccessToken $access_token): array
+    {
+        /**
+         * Metadata Query
+         */
+        $metadata_query = new MetadataQuery($access_token);
+        $metadata_query_search_results = $metadata_query->metadata_query(
+            (string) $params['ancestor_folder_id'],
+            $params['scope'] . "." . $params['template_key'],
+            $params['query'],
+            $params['query_params'],
+            );
+        if ($metadata_query_search_results instanceof ClientError) {
+            /**
+             * @var ClientError $metadata_query_search_results
+             */
+            throw new ClientErrorException($metadata_query_search_results->message);
+        }
+        
+        $contracts = [];
+        foreach ($metadata_query_search_results->entries as $contract) {
+            $x = new Contract();
+            $x->setProject_name($contract['name']);
+            $x->setFolder_id($contract['id']);
+            $contracts[] = $x;
+        }
+        
+        
+        return [
+            $contracts,
+        ];
     }
 }
