@@ -12,6 +12,7 @@ use comcduarte\Box\API\Enum\FieldType;
 use comcduarte\Box\API\Exception\ClientErrorException;
 use comcduarte\Box\API\Resource\ClientError;
 use comcduarte\Box\API\Resource\Field;
+use comcduarte\Box\API\Resource\MetadataInstance;
 use comcduarte\Box\API\Resource\MetadataTemplate;
 use comcduarte\Box\API\Resource\MetadataTemplates;
 
@@ -79,5 +80,73 @@ class MetadataTemplateRepository extends AbstractRepository
     {
         $template->update_metadata_template();
         return;
+    }
+    
+    public function applyMetadataInstance(array $params, AccessToken $access_token): bool
+    {
+        $instance = new MetadataInstance($access_token);
+        
+        $scope = $params['scope'];
+        $template_key = $params['template_key'];
+        $data = json_decode($params['data'], TRUE);
+        
+        if (isset($params['folder_id'])) {
+            $folder_id = $params['folder_id'];
+            $result = $instance->create_metadata_instance_on_folder($folder_id, $scope, $template_key, $data);
+        } elseif (isset($params['file_id'])) {
+            $file_id = $params['file_id'];
+            $result = $instance->create_metadata_instance_on_file($file_id, $scope, $template_key, $data);
+        }
+        
+        if ($result instanceof ClientError) {
+            throw new ClientErrorException($result->message);
+        }
+        
+        return true;
+    }
+    
+    public function removeMetadataInstance(array $params, AccessToken $access_token): bool
+    {
+        $instance = new MetadataInstance($access_token);
+        
+        $scope = $params['scope'];
+        $template_key = $params['template_key'];
+        
+        if (isset($params['folder_id'])) {
+            $folder_id = $params['folder_id'];
+            $result = $instance->remove_metadata_instance_from_folder($folder_id, $scope, $template_key);
+        } elseif (isset($params['file_id'])) {
+            $file_id = $params['file_id'];
+            $result = $instance->remove_metadata_instance_from_file($file_id, $scope, $template_key);
+        }
+        
+        if ($result instanceof ClientError) {
+            throw new ClientErrorException($result->message);
+        }
+        
+        return true;
+    }
+    
+    public function updateMetadataInstance(array $params, AccessToken $access_token): bool
+    {
+        $instance = new MetadataInstance($access_token);
+        
+        $scope = $params['scope'];
+        $template_key = $params['template_key'];
+        $data = json_decode($params['data'], TRUE);
+        
+        if (isset($params['folder_id'])) {
+            $folder_id = $params['folder_id'];
+            $result = $instance->update_metadata_instance_on_folder($folder_id, $scope, $template_key, $data);
+        } elseif (isset($params['file_id'])) {
+            $file_id = $params['file_id'];
+            $result = $instance->update_metadata_instance_on_file($file_id, $scope, $template_key, $data);
+        }
+        
+        if ($result instanceof ClientError) {
+            throw new ClientErrorException($result->message);
+        }
+        
+        return true;
     }
 }
