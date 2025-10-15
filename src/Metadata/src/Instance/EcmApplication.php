@@ -7,8 +7,8 @@ use comcduarte\Box\API\Resource\MetadataInstance;
 
 class EcmApplication extends MetadataInstance
 {
-    protected string $queue;
-    protected string $contractNumber;
+    protected string $queue = '';
+    protected string $contractNumber = '';
     
     public function getQueue()
     {
