@@ -28,6 +28,21 @@ class MetadataTemplateRepository extends AbstractRepository
         return $templates;
     }
     
+    public function getMetadataTemplate(array $params, AccessToken $access_token)
+    {
+        $metadata_template = new MetadataTemplate($access_token);
+        
+        $scope = $params['scope'];
+        $template_key = $params['template_key'];
+        
+        $result = $metadata_template->get_metadata_template_by_name($scope, $template_key);
+        if ($result instanceof ClientError) {
+            throw new ClientErrorException($result->message);
+        }
+        
+        return $metadata_template;
+    }
+    
     public function createMetadataTemplate(array $params, AccessToken $access_token): MetadataTemplate
     {
         $template = new MetadataTemplate($access_token->getAccessToken());
