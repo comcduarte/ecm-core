@@ -3,11 +3,15 @@ declare(strict_types = 1);
 namespace Core\Contract\Repository;
 
 use Core\Contract\Entity\Contract;
+use Core\Metadata\Instance\EcmApplication;
+use Laminas\Validator\Regex;
 use comcduarte\Box\API\AccessToken;
 use comcduarte\Box\API\MetadataQuery;
 use comcduarte\Box\API\Exception\ClientErrorException;
 use comcduarte\Box\API\Resource\ClientError;
+use comcduarte\Box\API\Resource\File;
 use comcduarte\Box\API\Resource\Folder;
+use comcduarte\Box\API\Resource\Representation;
 
 class ContractRepository
 {
@@ -103,12 +107,26 @@ class ContractRepository
     public function find(string $folder_id, AccessToken $access_token): Contract
     {
         $contract = new Contract();
-        $contract->setFolder_id($folder_id);
-        $contract->setProject_name('Lorem Ipsum');
         
         $contract_folder = new Folder($access_token);
         $contract_folder->get_folder_information($folder_id);
         $contract->setContract_folder($contract_folder);
+        
+        $items = $contract_folder->list_items_in_folder($folder_id);
+        
+        $validator = new Regex('/^\d{4}-\d{0,4}.*[pPdDfF]{3}$/');
+        $contract_file_id = null;
+        foreach ( $items->entries as $item) {
+            if ($validator->isValid($item['name'])) {
+                $contract_file_id = $item['id'];
+            }
+        }
+        
+        $contract_file = new File($access_token);
+//         $contract_file->list_all_representations();
+        $contract_file->get_file_information($contract_file_id);
+//         $contract_file->request_desired_representation(Representation::TYPE_JPG, Representation::DIMENSION_1024x1024);
+        $contract->setContract_file($contract_file);
         
         return $contract;
     }
@@ -144,5 +162,40 @@ class ContractRepository
         return [
             $contracts,
         ];
+    }
+
+    public function move(string $source, string $destination, AccessToken $access_token): bool
+    {
+        $folder = new Folder($access_token);
+        $result= $folder->update_folder($source, ['parent' => ['id' => $destination]]);
+        
+        if ($result instanceof ClientError) {
+            throw new ClientErrorException($result->message);
+        }
+        
+        $folder_id = $source;
+        $scope = 'enterprise_1328932288';
+        $template_key = 'ecm-application';
+        $data = [
+            [
+                'op' => 'replace',
+                'path' => '/queue',
+                'value' => $destination,
+            ],
+        ];        
+        
+        $metadata_instance = new EcmApplication($access_token);
+        
+        $result = $metadata_instance->get_metadata_instance_on_folder($source, $scope, $template_key);
+        if ($result instanceof ClientError) {
+            throw new ClientErrorException($result->message);
+        }
+        
+        $result = $metadata_instance->update_metadata_instance_on_folder($folder_id, $scope, $template_key, $data);
+        if ($result instanceof ClientError) {
+            throw new ClientErrorException($result->message);
+        }
+        
+        return true;
     }
 }
