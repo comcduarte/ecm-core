@@ -11,7 +11,6 @@ use comcduarte\Box\API\Exception\ClientErrorException;
 use comcduarte\Box\API\Resource\ClientError;
 use comcduarte\Box\API\Resource\File;
 use comcduarte\Box\API\Resource\Folder;
-use comcduarte\Box\API\Resource\Representation;
 
 class ContractRepository
 {
