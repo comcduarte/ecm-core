@@ -19,20 +19,15 @@ class TemplateRepository extends AbstractRepository
     public function getTemplates(AccessToken $access_token): array
     {
         $folder = new Folder($access_token);
+        
+        /**
+         * @todo Remove hard coded folder id
+         */
         $response = $folder->get_folder_information('343236246817');
         
         if ($response instanceof ClientError) {
-            throw new ClientErrorException();
+            throw new ClientErrorException($response->message);
         }
-        
-        /**
-         * 
-         */
-        foreach ($folder->item_collection['entries'] as $item) {
-            $entries[] = $item;
-        }
-        
-        
-        return $entries;
+        return $folder->item_collection->entries;
     }
 }
