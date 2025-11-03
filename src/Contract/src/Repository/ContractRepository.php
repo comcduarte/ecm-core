@@ -76,6 +76,7 @@ class ContractRepository
         }
         
         $contract->setFolder_id($object->id);
+        $contract->setContract_folder($contract_folder);
         
         $object = $contract_folder->create_folder($contract->getFolder_id(), 'SUPPORTING DOCUMENTATION');
         
