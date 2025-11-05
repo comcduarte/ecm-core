@@ -11,6 +11,7 @@ use comcduarte\Box\API\Exception\ClientErrorException;
 use comcduarte\Box\API\Resource\ClientError;
 use comcduarte\Box\API\Resource\File;
 use comcduarte\Box\API\Resource\Folder;
+use comcduarte\Box\API\Resource\Items;
 
 class ContractRepository
 {
@@ -104,6 +105,38 @@ class ContractRepository
         return true;
     }
 
+    public function getSupportingDocumentation(array $params, AccessToken $access_token): Items
+    {
+        $app_folder = new Folder($access_token);
+        $folder_info = $app_folder->list_items_in_folder($params['contract-folder']);
+        
+        if ($folder_info instanceof ClientError) {
+            throw new ClientErrorException($folder_info->message);
+        }
+        
+        $supporting_documentation_folder_id = false;
+        foreach ($folder_info->entries as $entry) {
+            if ($entry['name'] == 'SUPPORTING DOCUMENTATION') {
+                $supporting_documentation_folder_id = $entry['id'];
+            }
+        }
+        
+        if (!$supporting_documentation_folder_id) {
+            /**
+             * If folder does not exist, return empty collection.
+             */
+            return new Items();
+        }
+        
+        $folder_info = $app_folder->list_items_in_folder($supporting_documentation_folder_id);
+        
+        if ($folder_info instanceof ClientError) {
+            throw new ClientErrorException($folder_info->message);
+        }
+        
+        return $folder_info;
+    }
+    
     public function find(string $folder_id, AccessToken $access_token): Contract
     {
         $contract = new Contract();
@@ -114,7 +147,7 @@ class ContractRepository
         
         $items = $contract_folder->list_items_in_folder($folder_id);
         
-        $validator = new Regex('/^\d{4}-\d{0,4}.*[pPdDfF]{3}$/');
+        $validator = new Regex('/^\d{4}-\d{0,4}.*[pPdDoOcCxXfF]{3,4}$/');
         $contract_file_id = null;
         foreach ( $items->entries as $item) {
             if ($validator->isValid($item['name'])) {
