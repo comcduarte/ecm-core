@@ -64,7 +64,7 @@ class ContractRepository
     public function createContract(array $params, AccessToken $access_token): Contract
     {
         $contract = new Contract();
-        $contract->setProject_name(sprintf('%d-%04d %s', date('Y'), 2, strtoupper($params['project-name'])));
+        $contract->setProject_name($params['contract-name']);
         
         $contract_folder = new Folder($access_token);
         $object = $contract_folder->create_folder($params['parent'], $contract->getProject_name());

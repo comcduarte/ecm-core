@@ -44,23 +44,30 @@ class EcmApplication extends MetadataInstance
         return $this;
     }
     
+    public function setType($type): self
+    {
+        /**
+         * Do not change the type of this object
+         */
+        return $this;
+    }
+    
     public function exchangeArray($data)
     {
         parent::exchangeArray($data);
         
         $this->contractNumber = $data['contract-number'] ?? "";
         $this->queue = $data['queue'] ?? "";
-        $this->projectName = $data['project-name'] ?? "";
+        $this->projectName = $data['PROJECT_NAME'] ?? "";
     }
     
     public function getArrayCopy()
     {
-        
-        
         $data = parent::getArrayCopy();
 
-        $data['queue'] = $this->queue;
-        $data['contractNumber'] = $this->contractNumber;
+        $data['queue'] = $this->getId();
+        $data['contractNumber'] = $this->getContractnumber();
+        $data['projectName'] = $this->getProjectName();
         
         return $data;
     }

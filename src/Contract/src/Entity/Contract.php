@@ -36,6 +36,7 @@ class Contract implements ArraySerializableInterface, EntityInterface
     public function setContract_file($contract_file)
     {
         $this->contract_file = $contract_file;
+        return $this;
     }
 
     /**
@@ -52,6 +53,7 @@ class Contract implements ArraySerializableInterface, EntityInterface
     public function setContract_folder($contract_folder)
     {
         $this->contract_folder = $contract_folder;
+        return $this;
     }
 
     /**
@@ -76,6 +78,7 @@ class Contract implements ArraySerializableInterface, EntityInterface
     public function setFolder_id($folder_id)
     {
         $this->folder_id = $folder_id;
+        return $this;
     }
 
     /**
@@ -84,6 +87,7 @@ class Contract implements ArraySerializableInterface, EntityInterface
     public function setProject_name($project_name)
     {
         $this->project_name = $project_name;
+        return $this;
     }
 
     public function getUpdated(): ?DateTimeImmutable
