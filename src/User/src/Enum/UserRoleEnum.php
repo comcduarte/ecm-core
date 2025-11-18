@@ -66,7 +66,7 @@ enum UserRoleEnum: string
     case ECM_VENDOR = 'ECM_VENDOR';
     case ECM_MAYOR = 'ECM_MAYOR';
     
-    case ECM_NO_NOTIFICATION = 'ECM_NO_NOTIFICATION';
+    case ECM_NO_NOTIFICATIONS = 'ECM_NO_NOTIFICATIONS';
     
 
     /**
