@@ -10,6 +10,7 @@ use comcduarte\Box\API\AccessTokenAwareTrait;
 use comcduarte\Box\API\Resource\Folder;
 use comcduarte\Box\API\Resource\ClientError;
 use comcduarte\Box\API\Exception\ClientErrorException;
+use Core\Contract\Enum\QueueFolderEnum;
 
 #[Entity(name: Template::class)]
 class TemplateRepository extends AbstractRepository
@@ -23,7 +24,7 @@ class TemplateRepository extends AbstractRepository
         /**
          * @todo Remove hard coded folder id
          */
-        $response = $folder->get_folder_information('343236246817');
+        $response = $folder->get_folder_information(QueueFolderEnum::ECM_TEMPLATES->value);
         
         if ($response instanceof ClientError) {
             throw new ClientErrorException($response->message);
