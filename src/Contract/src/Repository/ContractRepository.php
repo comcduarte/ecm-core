@@ -207,7 +207,7 @@ class ContractRepository
         }
         
         $folder_id = $source;
-        $scope = 'enterprise_1328932288';
+        $scope = 'enterprise';
         $template_key = 'ecm-application';
         $data = [
             [
