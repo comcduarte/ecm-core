@@ -12,7 +12,7 @@ Enum QueueFolderEnum: string
     
     /**
      * Production
-     */
+     * /
     case ECM_ONBASE = "348908106622";
     case ECM_TEMPLATES = "348908147055";
     
@@ -61,7 +61,7 @@ case ECM_PW = "352588405548";
     
     /**
      * Development
-     * /
+     */
     case ECM_ONBASE = "336171280120";
     case ECM_TEMPLATES = "343236246817";
     
@@ -100,12 +100,12 @@ case ECM_PW = "352588405548";
     case ECM_WS = "354149749732";
     case ECM_YS = "354150522514";
     
-    case DEPARTMENTS = "354149908634";
-    case LEGAL = "336160775495";
-    case MAYOR = "336171664521";
-    case PURCHASING = "336166331778";
-    case RISK = "336171945517";
-    case VENDOR = "345199902550";
+    case ECM_DEPARTMENTS = "354149908634";
+    case ECM_LEGAL = "336160775495";
+    case ECM_MAYOR = "336171664521";
+    case ECM_PURCHASING = "336166331778";
+    case ECM_RISK = "336171945517";
+    case ECM_VENDOR = "345199902550";
     
     /**
      * End
