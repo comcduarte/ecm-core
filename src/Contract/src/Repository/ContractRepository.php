@@ -12,6 +12,7 @@ use comcduarte\Box\API\Resource\ClientError;
 use comcduarte\Box\API\Resource\File;
 use comcduarte\Box\API\Resource\Folder;
 use comcduarte\Box\API\Resource\Items;
+use comcduarte\Box\API\Resource\Query;
 
 class ContractRepository
 {
@@ -45,15 +46,27 @@ class ContractRepository
             //-- LIST YEARS --//
             foreach ($doc_type_folder->entries as $year){
                     
+                $query = new Query();
+                $query->offset = 0;
+                $query->limit = 100;
                 
-                $contract_folder = $app_folder->list_items_in_folder($year['id']);
+                while (true) {
+                    $contract_folder = $app_folder->list_items_in_folder($year['id'], $query);
                 
-                foreach ($contract_folder->entries as $contract) {
-                    $entity = new Contract();
-                    $entity->setProject_name($contract['name']);
-                    $entity->setFolder_id($contract['id']);
+                    foreach ($contract_folder->entries as $contract) {
+                        $entity = new Contract();
+                        $entity->setProject_name($contract['name']);
+                        $entity->setFolder_id($contract['id']);
+                        
+                        $folders[$doc_type['name']][$year['name']][$contract['name']] = $entity;
+                    }  
                     
-                    $folders[$doc_type['name']][$year['name']][$contract['name']] = $entity;
+                    if ($contract_folder->total_count <= $query->limit + $query->offset) {
+                        break;
+                    }
+                    
+                    $query->offset += $query->limit;
+                    unset($contract_folder);
                 }
             }
         }
