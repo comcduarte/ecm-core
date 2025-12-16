@@ -33,6 +33,14 @@ class Amendment extends MetadataInstance
         $this->documentType = $documentType;
     }
 
+    public function setType($type): self
+    {
+        /**
+         * Do not change the type of this object
+         */
+        return $this;
+    }
+    
     /**
      * Parent Method Extensions
      */
