@@ -150,6 +150,28 @@ class ContractRepository
         return $folder_info;
     }
     
+    public function getAmendments(array $params, AccessToken $access_token): Items
+    {
+        $app_folder = new Folder($access_token);
+        $folder_info = $app_folder->list_items_in_folder($params['contract-folder']);
+        
+        if ($folder_info instanceof ClientError) {
+            throw new ClientErrorException($folder_info->message);
+        }
+        
+        $amendments = new Items;
+        foreach ($folder_info->entries as $entry) {
+            if (preg_match('/^\d{4}-.*AM\d+.*$/', $entry['name'])) {
+                $folder = new Folder($access_token);
+                $folder->hydrate($entry);
+                
+                $amendments->entries[] = $folder;
+            }
+        }
+        
+        return $amendments;
+    }
+    
     public function find(string $folder_id, AccessToken $access_token): Contract
     {
         $contract = new Contract();
