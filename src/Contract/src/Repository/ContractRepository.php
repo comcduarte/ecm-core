@@ -223,6 +223,11 @@ class ContractRepository
             $x = new Contract();
             $x->setProject_name($contract['name']);
             $x->setFolder_id($contract['id']);
+            
+            $y = new Folder($access_token);
+            $y->get_folder_information($contract['id']);
+            $x->setContract_folder($y);
+            
             $contracts[] = $x;
         }
         
