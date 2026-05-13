@@ -22,7 +22,7 @@ interface RoleInterface extends EntityInterface
     public function setName(BackedEnum $name): RoleInterface;
 
     /**
-     * @return RoleType
+     * @phpstan-return RoleType
      */
     public function getArrayCopy(): array;
 }

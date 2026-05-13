@@ -43,7 +43,7 @@ use Dot\DependencyInjection\Factory\AttributedServiceFactory;
 class ConfigProvider
 {
     /**
-     * @return ConfigType
+     * @phpstan-return ConfigType
      */
     public function __invoke(): array
     {
@@ -54,7 +54,7 @@ class ConfigProvider
     }
 
     /**
-     * @return DependenciesType
+     * @phpstan-return DependenciesType
      */
     private function getDependencies(): array
     {
@@ -71,7 +71,7 @@ class ConfigProvider
     }
 
     /**
-     * @return DoctrineConfigType
+     * @phpstan-return DoctrineConfigType
      */
     private function getDoctrineConfig(): array
     {
