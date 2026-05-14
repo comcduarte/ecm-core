@@ -91,6 +91,31 @@ class MetadataTemplateRepository extends AbstractRepository
         return;
     }
 
+    public function getMetadataInstance(array $params, AccessToken $access_token): MetadataInstance
+    {
+        $instance = new MetadataInstance($access_token);
+        
+        /**
+         * Parameters
+         */
+        $scope          = $params['scope'];
+        $template_key   = $params['template_key'];
+        
+        if (isset($params['folder_id'])) {
+            $folder_id = $params['folder_id'];
+            $result = $instance->get_metadata_instance_on_folder($folder_id, $scope, $template_key);
+        } elseif (isset($params['file_id'])) {
+            $file_id = $params['file_id'];
+            $result = $instance->get_metadata_instance_on_file($file_id, $scope, $template_key);
+        }
+        
+        if ($result instanceof ClientError) {
+            throw new ClientErrorException($result->message);
+        }
+        
+        return $result;
+    }
+    
     public function updateMetadataTemplate(MetadataTemplate $template, AccessToken $access_token): void
     {
         $template->update_metadata_template();
