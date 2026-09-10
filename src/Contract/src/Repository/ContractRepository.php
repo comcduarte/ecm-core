@@ -13,65 +13,20 @@ use comcduarte\Box\API\Resource\File;
 use comcduarte\Box\API\Resource\Folder;
 use comcduarte\Box\API\Resource\Items;
 use comcduarte\Box\API\Resource\Query;
+use comcduarte\Box\API\Search;
+use comcduarte\Box\API\Enum\ResourceType;
 
 class ContractRepository
 {
 
     public function getContracts(array $params, AccessToken $access_token): mixed
     {
-        $app_folder = new Folder($access_token);
-        $folder_info = $app_folder->list_items_in_folder($params['application-folder']);
+        $search = new Search($access_token);
+        $search->query = $params['query'];
+        $search->type = ResourceType::Folder;
+        $results = $search->search_for_content();
         
-        if ($folder_info instanceof ClientError) {
-            throw new ClientErrorException($folder_info->message);
-        }
-        
-        
-        //-- FIND CABINET --//
-        $folders = [];
-        foreach ($folder_info->entries as $entry) {
-            if ($entry['name'] != 'CABINET') {
-                continue;
-            }
-            
-            $folder_info = $app_folder->list_items_in_folder($entry['id']);
-            break;
-        }
-        
-        //-- LIST DOCUMENT TYPES --//
-        foreach ($folder_info->entries as $doc_type) {
-            
-            $doc_type_folder = $app_folder->list_items_in_folder($doc_type['id']);
-            
-            //-- LIST YEARS --//
-            foreach ($doc_type_folder->entries as $year){
-                    
-                $query = new Query();
-                $query->offset = 0;
-                $query->limit = 100;
-                
-                while (true) {
-                    $contract_folder = $app_folder->list_items_in_folder($year['id'], $query);
-                
-                    foreach ($contract_folder->entries as $contract) {
-                        $entity = new Contract();
-                        $entity->setProject_name($contract['name']);
-                        $entity->setFolder_id($contract['id']);
-                        
-                        $folders[$doc_type['name']][$year['name']][$contract['name']] = $entity;
-                    }  
-                    
-                    if ($contract_folder->total_count <= $query->limit + $query->offset) {
-                        break;
-                    }
-                    
-                    $query->offset += $query->limit;
-                    unset($contract_folder);
-                }
-            }
-        }
-        
-        return $folders;
+        return $results->entries;
     }
     
     public function createContract(array $params, AccessToken $access_token): Contract
