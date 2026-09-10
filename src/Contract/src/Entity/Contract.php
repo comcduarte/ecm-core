@@ -18,10 +18,28 @@ class Contract implements ArraySerializableInterface, EntityInterface
     
     protected string $project_name;
     
+    protected int $progress;
+    
     protected Folder $contract_folder;
     
     protected File $contract_file;
     
+    /**
+     * @return number
+     */
+    public function getProgress()
+    {
+        return $this->progress;
+    }
+
+    /**
+     * @param number $progress
+     */
+    public function setProgress($progress)
+    {
+        $this->progress = $progress;
+    }
+
     /**
      * @return \comcduarte\Box\API\Resource\File
      */

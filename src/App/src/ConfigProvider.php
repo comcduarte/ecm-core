@@ -100,7 +100,7 @@ class ConfigProvider
     public const REGEXP_UUID = '{uuid:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}';
 
     /**
-     * @return ConfigType
+     * @phpstan-return ConfigType
      */
     public function __invoke(): array
     {
@@ -112,7 +112,7 @@ class ConfigProvider
     }
 
     /**
-     * @return DependenciesType
+     * @phpstan-return DependenciesType
      */
     private function getDependencies(): array
     {
@@ -135,7 +135,7 @@ class ConfigProvider
     }
 
     /**
-     * @return DoctrineConfigType
+     * @phpstan-return DoctrineConfigType
      */
     private function getDoctrineConfig(): array
     {
