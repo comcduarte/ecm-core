@@ -7,14 +7,13 @@ use Core\Metadata\Instance\EcmApplication;
 use Laminas\Validator\Regex;
 use comcduarte\Box\API\AccessToken;
 use comcduarte\Box\API\MetadataQuery;
+use comcduarte\Box\API\Search;
+use comcduarte\Box\API\Enum\ResourceType;
 use comcduarte\Box\API\Exception\ClientErrorException;
 use comcduarte\Box\API\Resource\ClientError;
 use comcduarte\Box\API\Resource\File;
 use comcduarte\Box\API\Resource\Folder;
 use comcduarte\Box\API\Resource\Items;
-use comcduarte\Box\API\Resource\Query;
-use comcduarte\Box\API\Search;
-use comcduarte\Box\API\Enum\ResourceType;
 
 class ContractRepository
 {
